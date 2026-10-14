@@ -36,7 +36,7 @@ export default function ServerTagSection({ guildId, guildName, channels = [], ro
     tag: '',
     caseSensitive: false,
     channelId: '',
-    message: '🎉 Congratulations {user}! Thank you for adopting the **{server}** tag! 🏷️',
+    message: '',
     embedEnabled: true,
     embedTitle: '🏷️ New Server Tag Supporter!',
     embedColor: '#a855f7',
@@ -588,13 +588,13 @@ export default function ServerTagSection({ guildId, guildName, channels = [], ro
               </div>
 
               <div style={{ marginBottom: '14px' }}>
-                <label style={labelStyle}>Channel Text Message:</label>
+                <label style={labelStyle}>Channel Text Message (Optional):</label>
                 <textarea
                   rows={2}
                   value={settings.message}
                   onChange={e => setSettings({ ...settings, message: e.target.value })}
                   style={{ ...inputStyle, resize: 'vertical' }}
-                  placeholder="e.g. 🎉 Congratulations {user}! Thank you for adopting the {server} tag! 🏷️"
+                  placeholder="Leave empty to send only the embed card, or type a custom text message here"
                 />
               </div>
             </div>
@@ -901,15 +901,17 @@ export default function ServerTagSection({ guildId, guildName, channels = [], ro
                     </span>
                   </div>
 
-                  {/* Channel Text Message Content */}
-                  <div style={{ color: '#dbdee1', fontSize: '0.94rem', lineHeight: 1.45, marginBottom: '10px' }}>
-                    {settings.pingUser && (
-                      <span style={{ background: 'rgba(88,101,242,0.3)', color: '#c9cdfb', padding: '1px 4px', borderRadius: '4px', marginRight: '6px', fontWeight: 600 }}>
-                        {previewUserMention}
-                      </span>
-                    )}
-                    <span>{replacePreview(settings.message) || '🎉 Adopted the server tag!'}</span>
-                  </div>
+                  {/* Channel Text Message Content (Only if custom text is provided, or if embed is disabled) */}
+                  {(settings.message || !settings.embedEnabled) && (
+                    <div style={{ color: '#dbdee1', fontSize: '0.94rem', lineHeight: 1.45, marginBottom: '10px' }}>
+                      {settings.pingUser && (
+                        <span style={{ background: 'rgba(88,101,242,0.3)', color: '#c9cdfb', padding: '1px 4px', borderRadius: '4px', marginRight: '6px', fontWeight: 600 }}>
+                          {previewUserMention}
+                        </span>
+                      )}
+                      <span>{replacePreview(settings.message) || (settings.pingUser ? '' : '🎉 Adopted the server tag!')}</span>
+                    </div>
+                  )}
 
                   {/* Discord Embed Card */}
                   {settings.embedEnabled && (
